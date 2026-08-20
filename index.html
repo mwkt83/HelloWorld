@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HelloWorld</title>
+<meta name="description" content="A tiny Python CLI that greets you by name.">
+<style>
+  :root {
+    --bg: #f6f5f2;
+    --bg-alt: #ffffff;
+    --text: #1c1b1a;
+    --text-dim: #6b6660;
+    --accent: #d97757;
+    --accent-dim: #f0c9b8;
+    --border: #e6e2db;
+    --code-bg: #1c1b1a;
+    --code-text: #f6f5f2;
+    --shadow: rgba(28, 27, 26, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171615;
+      --bg-alt: #201f1d;
+      --text: #f2efe9;
+      --text-dim: #a39d94;
+      --accent: #e8916b;
+      --accent-dim: #4a2f22;
+      --border: #34312d;
+      --code-bg: #0e0d0c;
+      --code-text: #f2efe9;
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 6vh 24px 10vh;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+
+  .badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    box-shadow: 0 6px 16px var(--shadow);
+  }
+
+  .kicker {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 600;
+    margin: 0;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    margin: 4px 0 0;
+    letter-spacing: -0.02em;
+  }
+
+  .lede {
+    font-size: 1.15rem;
+    color: var(--text-dim);
+    margin: 18px 0 40px;
+    max-width: 52ch;
+  }
+
+  .card {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 10px var(--shadow);
+  }
+
+  .card h2 {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+  }
+
+  .card p.sub {
+    margin: 0 0 18px;
+    color: var(--text-dim);
+    font-size: 0.92rem;
+  }
+
+  .demo-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    min-width: 160px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--accent);
+  }
+
+  button {
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: #1c1b1a;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.1s ease, opacity 0.15s ease;
+  }
+
+  button:hover { opacity: 0.9; }
+  button:active { transform: scale(0.97); }
+
+  .greeting {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-radius: 10px;
+    background: var(--code-bg);
+    color: var(--code-text);
+    font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+    font-size: 1.05rem;
+    min-height: 1.4em;
+  }
+
+  pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 18px;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  code {
+    font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  }
+
+  .usage-line {
+    margin: 6px 0;
+  }
+  .usage-line .prompt {
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  a:hover { text-decoration: underline; }
+
+  .pill-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .pill {
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="badge">👋</div>
+      <p class="kicker">Python · CLI</p>
+    </header>
+    <h1>HelloWorld</h1>
+    <p class="lede">
+      A minimal command-line greeter, written in Python. No dependencies,
+      no configuration — just a friendly hello.
+    </p>
+
+    <div class="card">
+      <h2>Try it</h2>
+      <p class="sub">This mirrors exactly what the script does, right in your browser.</p>
+      <div class="demo-row">
+        <input type="text" id="nameInput" placeholder="Type a name…" autocomplete="off">
+        <button id="greetBtn">Greet</button>
+      </div>
+      <div class="greeting" id="greeting">Hello, World!</div>
+    </div>
+
+    <div class="card">
+      <h2>Usage</h2>
+      <p class="sub">Run it from your terminal.</p>
+      <pre><code><span class="usage-line"><span class="prompt">$</span>python hello_world.py</span>
+Hello, World!
+
+<span class="usage-line"><span class="prompt">$</span>python hello_world.py Ada</span>
+Hello, Ada!</code></pre>
+    </div>
+
+    <div class="card">
+      <h2>Source</h2>
+      <p class="sub">hello_world.py</p>
+      <pre><code>import argparse
+
+parser = argparse.ArgumentParser(description="Greet someone.")
+parser.add_argument("name", nargs="?", default="World", help="name to greet")
+args = parser.parse_args()
+
+print(f"Hello, {args.name}!")</code></pre>
+      <div class="pill-row">
+        <span class="pill">stdlib only</span>
+        <span class="pill">argparse</span>
+        <span class="pill">MIT-friendly</span>
+      </div>
+    </div>
+
+    <footer>
+      <span>Built as a small, honest example.</span>
+      <a href="https://github.com/mwkt83/HelloWorld" target="_blank" rel="noopener">View on GitHub →</a>
+    </footer>
+  </div>
+
+  <script>
+    const input = document.getElementById('nameInput');
+    const btn = document.getElementById('greetBtn');
+    const greeting = document.getElementById('greeting');
+
+    function greet() {
+      const raw = input.value.trim();
+      const name = raw.length ? raw : 'World';
+      greeting.textContent = `Hello, ${name}!`;
+    }
+
+    btn.addEventListener('click', greet);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') greet();
+    });
+  </script>
+</body>
+</html>
